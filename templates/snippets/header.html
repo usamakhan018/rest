@@ -1,0 +1,26 @@
+<div class="container">
+  <header class="border-bottom lh-1 py-3">
+    <div class="row flex-nowrap justify-content-between align-items-center">
+      <div class="col-6">
+        <a class="blog-header-logo text-body-emphasis text-decoration-none" href="{% url 'articles:home' %}">Hamidiye Majlisler</a>
+      </div>
+      <div class="col-6 d-flex justify-content-end align-items-center">
+        <form method="get" action="{% url 'articles:search' %}">
+          <input class="form-control" placeholder="Search" width="40" type="" name="q">
+        </form>
+        <a href=""><img src="C:\Users\Usama\Desktop\Hamidiye majlisler\blog\media\penguins.jpg" style="width: 40px; height: 40px; border-radius: 50;"></a>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-scroller py-1 mb-3 border-bottom">
+    <nav class="nav nav-underline justify-content-between">
+      <a class="nav-item nav-link link-body-emphasis" href="#">Earning Reports</a>
+      <a class="nav-item nav-link link-body-emphasis" href="#">Dividends</a>
+      <a class="nav-item nav-link link-body-emphasis" href="#">Balance Sheet</a>
+      <a class="nav-item nav-link link-body-emphasis" href="#">Sectors</a>
+      <a class="nav-item nav-link link-body-emphasis" href="#">Stocks</a>
+      <a class="nav-item nav-link link-body-emphasis" href="#">Cycles</a>
+    </nav>
+  </div>
+</div>

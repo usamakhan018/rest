@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %} Register{% endblock %}
+{% block content %} 
+	<div class="d-flex justify-content-center">
+		<div>
+			<div class="text-center">
+			<h1>Register</h1>
+			<p>Use the form below to signup</p>
+			</div>
+			<div>
+				<form method="post">
+					{% csrf_token %}
+					{{ form.as_p }}
+					<input type="submit" class="btn btn-secondary" name="">
+				</form>
+			</div>
+	</div>
+	</div>
+	<script type="text/javascript">
+		document.getElementById('id_username').classList.add('form-control')
+		document.getElementById('id_password').classList.add('form-control')
+		document.getElementById('id_password2').classList.add('form-control')		
+	</script>
+{% endblock %}
+
+{% block js %}
+
+
+
+{% endblock %}

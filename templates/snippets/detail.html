@@ -1,0 +1,10 @@
+<article class="blog-post">
+  <h2 class="display-5 link-body-emphasis mb-1">{{ article.title }}</h2>
+  <p class="blog-post-meta">{{ article.publish }}<a href="#">{{ article.author }}</a></p>
+  <img src="{{ article.featured_image.url }}" class="img-fluid rounded">
+  <p>{{ article.content|safe }}</p>
+  <div>
+  <a class="btn btn-outline-primary rounded-pill" style="float: right;" href="{{ article.get_absolute_url }}">Read More</a>
+  </div>
+  <br>
+</article>

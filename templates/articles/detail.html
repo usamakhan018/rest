@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %} 
+<article class="blog-post">
+  <h2 class="display-5 link-body-emphasis mb-1">{{ article.title }}</h2>
+  <p class="blog-post-meta">{{ article.publish }}<a href="#">{{ article.author }}</a><br>
+    tags: 
+    {% for tag in article.tags.all %} <a href="{% url 'articles:home' tag=tag.name %}">{{ tag.name }}</a>{% if not foorloop.last %}, {% endif %}{% endfor %}
+  </p>
+  {% if article.featured_image %}<img src="{{ article.featured_image.url }}" class="img-fluid rounded">{% endif %}
+  
+  <p>{{ article.content|safe }}</p>
+  <br>
+</article>
+
+{% for art in related_articles %}
+{{ art }}
+{% endfor %}
+
+
+<h2 class="display-5 link-body-emphasis mb-1">Share your thoughts</h2>
+<form method="post">
+	{% csrf_token %}
+	{{ comment_form.as_p }}
+	<input type="submit" name="" class="btn btn-info" value="Submit">
+</form>
+
+<br>
+{% for comment in comments %}
+<article class="blog-post">
+  <h3 class="display-5 link-body-emphasis mb-1">{{ comment.subject }}</h3>
+  <p class="blog-post-meta">{{ comment.created }}&nbsp;<span>{{ comment.name }}</span>
+  </p>
+  <p>{{ comment.content|safe }}</p>
+  <br>
+</article>
+{% endfor %}
+<script type="text/javascript">
+	document.getElementById('id_name').classList.add('form-control')
+	document.getElementById('id_subject').classList.add('form-control')
+	document.getElementById('id_email').classList.add('form-control')
+	document.getElementById('id_content').classList.add('form-control')
+</script>
+{% endblock %}

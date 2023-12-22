@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %} Register{% endblock %}
+{% block content %} 
+	<div class="d-flex justify-content-center">
+		<div>
+			<div class="text-center">
+			<h1>Update your account</h1>
+			<p>Use the form below to update your account info.</p>
+			</div>
+			<div>
+				<form method="post" enctype="multipart/form-data">
+					{% csrf_token %}
+					{{ form.as_p }}
+					<input type="submit" class="btn btn-secondary" name="">
+				</form>
+			</div>
+	</div>
+	</div>
+	<script type="text/javascript">
+		document.getElementById('id_first_name').classList.add('form-control')
+		document.getElementById('id_username').classList.add('form-control')
+		document.getElementById('id_email').classList.add('form-control')
+		document.getElementById('id_last_name').classList.add('form-control')
+		document.getElementById('id_profile_image').classList.add('form-control')
+	</script>
+{% endblock %}
+

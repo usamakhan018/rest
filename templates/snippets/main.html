@@ -1,0 +1,26 @@
+{% for article in articles %} 
+<article class="blog-post">
+  <h2 class="display-5 link-body-emphasis mb-1"><a style="text-decoration: none; color: black;" href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
+  <p class="blog-post-meta">{{ article.publish }} by <a href="#">{{ article.author }}</a><br>{% for tag in article.tags.all %} <a href="{% url 'articles:home' tag=tag.name %}">{{ tag.name }}</a>{% if not foorloop.last %}, {% endif %}{% endfor %}</p>
+
+  <p>{{ article.content|striptags|truncatewords:50|safe }}</p>
+  <div>
+  <a class="btn btn-outline-primary rounded-pill" style="float: right;" href="{{ article.get_absolute_url }}">Read More</a>
+  </div>
+  <br>
+</article>
+{% endfor %}
+
+<nav class="blog-pagination" aria-label="Pagination">
+  {% if articles.has_previous %}
+  <a class="btn btn-outline-primary rounded-pill" href="?page={{articles.previous_page_number}}">Older</a>
+  {% else %}
+  <a class="btn btn-outline-primary rounded-pill disabled" aria-disabled='true'>Older</a>
+  {% endif %}
+  <span> {{ articles.number }} out of {{ articles.paginator.num_pages }}</span>
+  {% if articles.has_next %}
+  <a class="btn btn-outline-primary rounded-pill" href="?page={{articles.next_page_number}}">Newer</a>
+  {% else %}
+  <a class="btn btn-outline-primary rounded-pill disabled" aria-disabled='true'>Newer</a>
+  {% endif %}
+</nav>

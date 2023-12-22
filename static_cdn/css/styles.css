@@ -1,0 +1,12 @@
+.blog-header-logo{
+	color: black; 
+}
+:root{
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+.nav-item{
+	color: black; 
+	font-weight: 600 !important;
+}
