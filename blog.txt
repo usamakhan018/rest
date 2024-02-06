@@ -1,16 +1,16 @@
 blog featuers:
 
-# created and shown content on front end.
-# create search engine.
-# show those posts on the site.
-# feed.
-# sitemap.
+# created and shown content on front end. $
+# create search engine. $
+# show those posts on the site. $
+# feed. 
+# sitemap. $
 
-# allow users to chat
-# create that account.
+# allow users to chat 
+# create that account. $
 # 
 
-
+messages
 
 allow them to edit their email and username directly for now i will update these next time.
 
@@ -19,3 +19,4 @@ likes
 follow's
 only allow comments when users are logged in.
 
+#profile page

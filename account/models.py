@@ -1,5 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.conf import settings
+
+
+class Contact(models.Model):
+	user_from = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="followed_by", on_delete=models.CASCADE)
+	user_to = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="followed", on_delete=models.CASCADE)
+	
+	created = models.DateTimeField(auto_now_add=True)
+	updated = models.DateTimeField(auto_now=True)
+
+	def __str__(self):
+		return f"{self.user_from} follows {self.user_to}"
+
 class AccountManager(BaseUserManager):
 	def create_user(self, username, password):
 		if not username:
@@ -26,11 +39,12 @@ def default_profile_image():
 class Account(AbstractBaseUser):
 	username = models.CharField(max_length=255, unique=True)
 	email = models.EmailField(max_length=255, unique=True, null=True, blank=True)
-	first_name = models.CharField(max_length=255, null=True, blank=True)
-	last_name = models.CharField(max_length=255, null=True, blank=True)
+	first_name = models.CharField(max_length=255, null=True, blank=True, default="")
+	last_name = models.CharField(max_length=255, null=True, blank=True, default="")
 	profile_image = models.ImageField(upload_to=profile_image_path, default=default_profile_image, null=True, blank=True)
 	hide_email = models.BooleanField(default=True)
-
+	following = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="followers", symmetrical=False, through=Contact)
+	
 	last_login = models.DateTimeField(auto_now=True)
 	date_joined = models.DateTimeField(auto_now_add=True)
 	is_active = models.BooleanField(default=True)
@@ -50,3 +64,6 @@ class Account(AbstractBaseUser):
 
 	def has_module_perms(self, app_label):
 		return True
+
+	def get_full_name(self):
+		return f"{self.first_name} {self.last_name}"

@@ -2,11 +2,14 @@
 {% block content %} 
 <article class="blog-post">
   <h2 class="display-5 link-body-emphasis mb-1">{{ article.title }}</h2>
-  <p class="blog-post-meta">{{ article.publish }}<a href="#">{{ article.author }}</a><br>
+  <p class="blog-post-meta">{{ article.publish }}&nbsp;by&nbsp;<a href="{% url 'articles:home' author=article.author%}">{{ article.author }}</a><br>
     tags: 
-    {% for tag in article.tags.all %} <a href="{% url 'articles:home' tag=tag.name %}">{{ tag.name }}</a>{% if not foorloop.last %}, {% endif %}{% endfor %}
+    {% for tag in article.tags.all %} <a href="{% url 'articles:home' tag=tag.name %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+    <p>Views: {{ article.views }} &nbsp;&nbsp;&nbsp; Likes: <span id="id_likes_count">{{ article.likes.count }}</span></p>
+    <button id="id_like_btn" data-action="{% if request.user in article.likes.all %}un{% endif %}like" onclick="like('{{ article.id }}')">{% if request.user in article.likes.all %}Un{% endif %}like </button>
   </p>
   {% if article.featured_image %}<img src="{{ article.featured_image.url }}" class="img-fluid rounded">{% endif %}
+
   
   <p>{{ article.content|safe }}</p>
   <br>
@@ -31,13 +34,43 @@
   <p class="blog-post-meta">{{ comment.created }}&nbsp;<span>{{ comment.name }}</span>
   </p>
   <p>{{ comment.content|safe }}</p>
-  <br>
 </article>
 {% endfor %}
 <script type="text/javascript">
-	document.getElementById('id_name').classList.add('form-control')
+
+  function like(articleId){
+    payload = {'article_id': articleId}
+    action = document.getElementById('id_like_btn').getAttribute('data-action')
+
+    payload['action'] = action == 'like' ? 'like': 'unlike'
+
+    $.post({
+      url: "{% url 'articles:like' %}",
+      headers: {'X-CSRFToken': '{{csrf_token}}'},
+      data: payload,
+      success: function(data){
+        console.log(data)
+        if (data.status == 'ok') {
+          action = data.action
+          count_span = document.getElementById('id_likes_count')
+          like_btn = document.getElementById('id_like_btn')
+
+          like_btn.setAttribute('data-action',action=='like'? 'unlike' : 'like')
+          like_btn.innerText = action == 'like'?'Unlike' : 'Like'
+
+          previous_count = parseInt(count_span.innerText)
+          count_span.innerText = action == 'like' ? previous_count + 1 : previous_count - 1
+
+        } else if (data.status == 'error'){
+          showModal(error.header, error.data)
+        }
+      }
+    })  
+  }
+
+	document.getElementById('id_content').classList.add('form-control')
+  document.getElementById('id_name').classList.add('form-control')
 	document.getElementById('id_subject').classList.add('form-control')
 	document.getElementById('id_email').classList.add('form-control')
-	document.getElementById('id_content').classList.add('form-control')
 </script>
 {% endblock %}

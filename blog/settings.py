@@ -31,9 +31,12 @@ SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
+    
     'account',
+    'chat',
     'taggit',
     'articles',
+    'channels',
     'ckeditor',
     'ckeditor_uploader',
     'django.contrib.sites',
@@ -76,7 +79,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'blog.wsgi.application'
-
+ASGI_APPLICATION = 'blog.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -131,7 +134,6 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn/')
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_cdn/')
 
 STATICFILES_DIRS = [
@@ -164,3 +166,5 @@ AUTH_USER_MODEL = 'account.Account'
 LOGIN_URL = 'account:login'
 LOGOUT_URL = 'account:logout'
 LOGIN_REDIRECT_URL = 'articles:home'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

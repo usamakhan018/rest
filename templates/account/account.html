@@ -1,7 +1,130 @@
-{% extends 'base.html' %}
+{% extends 'base2.html' %}
 
 {% block content %}
-	<div class="text-center">
-		<img src="{{ account.profile_image.url }}" class="img-fluid rounded">
+<div class="d-flex flex-row">
+	<div class="text-center" style="width: 30vw;">
+		<img src="{{ account.profile_image.url }}" style="width: 150px; height: 150px; border-radius: 50%;" class="img-fluid">
+		<h4>{{ account.get_full_name }}</h4>
+		<h5>@{{ account.username }}</h5>
+
+		<div class="d-flex flex-row justify-content-between">
+
+			<i><p>Followers: <span id="id_follows_count">{{ account.followers.count }}</span></p></i>
+			<i><p>Following: <span id="id_following_count">{{ account.following.count }}</span></p></i>
+			<i><p>Articles Written: <span id="id_articles_count">{{ account.articles.count }}</span></p></i>
+		</div>
+
+		{% if is_self %}
+
+		<div class="d-flex flex-row justify-content-center" id="id_profile_btns">
+			<a class="btn btn-primary" href="{% url 'account:update' %}">Edit Profile</a>
+		</div>
+
+		{% endif %}
+
+		{% if not is_self %}
+		<div class="d-flex flex-row justify-content-center" id="id_profile_btns">
+			<button id="id_follow_btn" class="btn btn-success mx-3" data-action="{% if request.user in account.followers.all %}un{% endif %}follow" onclick="follow('{{ account.id }}')">{% if request.user in account.followers.all %}Un{% endif %}follow </button>
+			<!-- <button class="btn btn-info mx-4">Follow</button> -->
+			<a class="btn btn-primary" href="{% url 'chat:chat' account.id %}">Message</a>
+		</div>
+		{% endif %}
 	</div>
+
+	<div class="" style="width: 70vw;">
+		
+		<!-- START IS_SELF -->	
+		{% if is_self %}
+		<h3>My Articles</h3><hr>
+		<div class="d-flex flex-row">
+		{% for article in my_articles %}
+		<article class="blog-post mx-3" style="width: 33%">
+		  <h5 class="link-body-emphasis mb-1"><a style="text-decoration: none; color: black;" href="{{ article.get_absolute_url }}">{{ article.title|truncatewords:5 }}</a></h5>
+		  <p class="blog-post-meta">{{ article.publish }} by <a href="{% url 'articles:home' author=article.author %#}">{{ article.author }}</a></p>
+
+		  <p>{{ article.content|striptags|truncatechars:60|safe }}</p>
+		  <div>
+		  	<a class="btn btn-outline-warning rounded-pill" style="float: right;" href="{{ article.get_absolute_url }}">Edit Article</a>
+		  	<a class="btn btn-outline-primary rounded-pill" style="float: right;" href="{{ article.get_absolute_url }}">View Article</a>
+		  </div>
+		  <br>
+		</article>
+		{% endfor %}
+		</div>
+		{% endif %}
+		<!-- START IS NOT SELF -->
+
+		{% if not is_self %}
+
+		<h3>Articles Written by {{ account.username }}</h3><hr>
+		<div class="d-flex flex-row">
+		{% for article in my_articles %}
+		<article class="blog-post mx-3" style="width: 33%">
+		  <h5 class="link-body-emphasis mb-1"><a style="text-decoration: none; color: black;" href="{{ article.get_absolute_url }}">{{ article.title|truncatewords:5 }}</a></h5>
+		  <p class="blog-post-meta">{{ article.publish }} by <a href="{% url 'articles:home' author=article.author %#}">{{ article.author }}</a></p>
+
+		  <p>{{ article.content|striptags|truncatechars:60|safe }}</p>
+		  <div>
+		  	<a class="btn btn-outline-warning rounded-pill" style="float: right;" href="{{ article.get_absolute_url }}">Edit Article</a>
+		  	<a class="btn btn-outline-primary rounded-pill" style="float: right;" href="{{ article.get_absolute_url }}">View Article</a>
+		  </div>
+		  <br>
+		</article>
+		{% endfor %}
+		</div>
+		{% endif %}
+		<!-- END IS NOT SELF -->
+		{% if is_self %}
+		<h3>Artilces you liked:</h3><hr>
+		<div class="d-flex flex-row">
+			{% if articles_liked.count == 0 %} <p>You have'nt liked any post  <a href="{% url 'articles:home' %}">read some posts</a> and like them.</p>{% endif %}
+			{% for article in articles_liked %} 
+			<article class="blog-post mx-3" style="width: 33%">
+			  <h5 class="link-body-emphasis mb-1"><a style="text-decoration: none; color: black;" href="{{ article.get_absolute_url }}">{{ article.title|truncatewords:5 }}</a></h5>
+			  <p class="blog-post-meta">{{ article.publish }} by <a href="{% url 'articles:home' author=article.author %}">{{ article.author }}</a></p>
+
+			  <p>{{ article.content|striptags|truncatechars:60|safe }}</p>
+			  <div>
+			  <a class="btn btn-outline-primary rounded-pill" style="float: right;" href="{{ article.get_absolute_url }}">Read More</a>
+			  </div>
+			  <br>
+			</article>
+			{% endfor %}
+		</div>
+		{% endif %}
+
+		<!-- END IS_SELF -->
+	</div>
+</div>
+<script type="text/javascript">
+	function follow(accountId){
+    payload = {'account_id': accountId}
+    action = document.getElementById('id_follow_btn').getAttribute('data-action')
+    payload['action'] = action == 'follow' ? 'follow': 'unfollow'
+
+    $.post({
+      url: "{% url 'account:follow' %}",
+      headers: {'X-CSRFToken': '{{csrf_token}}'},
+      data: payload,
+      success: function(data){
+        console.log(data)
+        if (data.status == 'ok') {
+          count_span = document.getElementById('id_follows_count')
+          follow_btn = document.getElementById('id_follow_btn')
+          follow_btn.setAttribute('data-action',action=='follow'? 'unfollow' : 'follow')
+          follow_btn.innerText = action == 'follow'?'Un Follow' : 'Follow'
+
+          previous_count = parseInt(count_span.innerText)
+          count_span.innerText = action == 'follow' ? previous_count + 1 : previous_count - 1
+
+        } else if (data.status == 'error'){
+          document.querySelector('.modal-header').innerText = data.header
+          document.querySelector('.modal-body').innerText = data.data
+          document.getElementById('id_modal_btn').click()
+        }
+      }
+    })  
+  }
+
+</script>
 {% endblock %}

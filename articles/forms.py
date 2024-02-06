@@ -1,6 +1,12 @@
 from django import forms
 from .models import Comment
-class CommentForm(forms.ModelForm):
+
+class UnAuthCommentForm(forms.ModelForm):
 	class Meta:
 		model = Comment
-		fields = ('name', 'email', 'subject', 'content')
+		fields = ('name', 'email', 'content')
+
+class AuthCommentForm(forms.ModelForm):
+	class Meta:
+		model = Comment
+		fields = ('content',)

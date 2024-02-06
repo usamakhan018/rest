@@ -1,7 +1,7 @@
 {% for article in articles %} 
 <article class="blog-post">
   <h2 class="display-5 link-body-emphasis mb-1"><a style="text-decoration: none; color: black;" href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
-  <p class="blog-post-meta">{{ article.publish }} by <a href="#">{{ article.author }}</a><br>{% for tag in article.tags.all %} <a href="{% url 'articles:home' tag=tag.name %}">{{ tag.name }}</a>{% if not foorloop.last %}, {% endif %}{% endfor %}</p>
+  <p class="blog-post-meta">{{ article.publish }} by <a href="{% url 'articles:home' author=article.author %}">{{ article.author }}</a><br>{% for tag in article.tags.all %} <a href="{% url 'articles:home' tag=tag.name %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
 
   <p>{{ article.content|striptags|truncatewords:50|safe }}</p>
   <div>

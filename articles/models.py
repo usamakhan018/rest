@@ -26,18 +26,20 @@ class Article(models.Model):
 	updated = models.DateTimeField(auto_now=True)
 	status = models.CharField(max_length=10, choices=STATUS_CHOICE, default='draft')
 
+	views = models.PositiveIntegerField(default=0)
+	likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='articles_liked')	
+
 	tags = TaggableManager()
 	objects = models.Manager()
 	published = ArticleManager()
 	def __str__(self):
-		return f""
+		return f"{self.author} posted {self.title}"
 
 	def get_absolute_url(self):
 		return reverse('articles:detail', args=[self.publish.year, self.publish.month, self.publish.day, self.slug])
 
 class Comment(models.Model):
 	article = models.ForeignKey(Article, related_name='comments', on_delete=models.CASCADE)
-	subject = models.CharField(max_length=255)
 	name = models.CharField(max_length=255)
 	email = models.EmailField(max_length=255)
 	content = models.TextField()
@@ -49,7 +51,12 @@ class Comment(models.Model):
 	def __str__(self):
 		return f"{self.name} commented on {self.article}"
 
+class Subscribe(models.Model):
+	email = models.EmailField(max_length=255)
+	is_active = models.BooleanField(default=True)
+	
+	created = models.DateTimeField(auto_now_add=True)
+	updated = models.DateTimeField(auto_now=True)
 
-
-
-
+	def __str__(self):
+		return f"{self.email}"

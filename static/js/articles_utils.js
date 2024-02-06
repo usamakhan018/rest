@@ -1,0 +1,24 @@
+function subscribe(){
+	email = document.getElementById('id_subscription_email').value
+	$.post({
+		url: "{% url 'articles:subscribe' %}",
+		data: {'email': email},
+		headers: {'X-CSRFToken': '{{ csrf_token }}'},
+		success: function(data){
+			console.log(data)
+			showModal(data.header, data.data)
+		},
+		error: function(data){
+			console.log(data)
+			showModal(data.header, data.data)
+		}
+
+
+	})
+}
+
+function showModal(header, body){
+	document.querySelector('.modal-header').innerText = header
+	document.querySelector('.modal-body').innerText = body
+	document.getElementById('id_modal_btn').click()
+}

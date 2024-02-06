@@ -8,7 +8,24 @@
         <form method="get" action="{% url 'articles:search' %}">
           <input class="form-control" placeholder="Search" width="40" type="" name="q">
         </form>
-        <a href=""><img src="C:\Users\Usama\Desktop\Hamidiye majlisler\blog\media\penguins.jpg" style="width: 40px; height: 40px; border-radius: 50;"></a>
+        {% if user.is_authenticated %}
+        
+        <div class="dropdown mx-3">
+            <img src="{{ user.profile_image.url }}" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="width: 40px; height: 40px; border-radius: 50%;padding: 0.4%; border: 1px solid gray;">
+          <ul class="dropdown-menu">
+            <li><h6 class="dropdown-header">{% if user.first_name %} {{ user.first_name }} {% else %} set name {% endif %}</h6></li>
+            <li><a class="dropdown-item" href="{% url 'account:account' user_id=user.id %}">My Account</a></li>
+            <li><a class="dropdown-item" href="{% url 'account:update' %}">Edit Account</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'account:logout' %}">Logout</a></li>
+          </ul>
+        </div>
+        {% else %}
+        <nav class="nav nav-underline justify-content-between mx-3">
+          <a class="nav-item nav-link link-body-emphasis" href="{% url 'account:login' %}">Login</a>
+          <a class="nav-item nav-link link-body-emphasis" href="{% url 'account:register' %}">Register</a>
+        </nav>
+        {% endif %}
       </div>
     </div>
   </header>
