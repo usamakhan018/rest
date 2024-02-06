@@ -26,7 +26,6 @@
 		<div class="d-flex flex-row justify-content-center" id="id_profile_btns">
 			<button id="id_follow_btn" class="btn btn-success mx-3" data-action="{% if request.user in account.followers.all %}un{% endif %}follow" onclick="follow('{{ account.id }}')">{% if request.user in account.followers.all %}Un{% endif %}follow </button>
 			<!-- <button class="btn btn-info mx-4">Follow</button> -->
-			<a class="btn btn-primary" href="{% url 'chat:chat' account.id %}">Message</a>
 		</div>
 		{% endif %}
 	</div>

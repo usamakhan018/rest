@@ -33,10 +33,8 @@ SITE_ID = 1
 INSTALLED_APPS = [
     
     'account',
-    'chat',
     'taggit',
     'articles',
-    'channels',
     'ckeditor',
     'ckeditor_uploader',
     'django.contrib.sites',
@@ -79,7 +77,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'blog.wsgi.application'
-ASGI_APPLICATION = 'blog.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

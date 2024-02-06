@@ -5,11 +5,15 @@
   <p class="blog-post-meta">{{ article.publish }}&nbsp;by&nbsp;<a href="{% url 'articles:home' author=article.author%}">{{ article.author }}</a><br>
     tags: 
     {% for tag in article.tags.all %} <a href="{% url 'articles:home' tag=tag.name %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
-    <p>Views: {{ article.views }} &nbsp;&nbsp;&nbsp; Likes: <span id="id_likes_count">{{ article.likes.count }}</span></p>
-    <button id="id_like_btn" data-action="{% if request.user in article.likes.all %}un{% endif %}like" onclick="like('{{ article.id }}')">{% if request.user in article.likes.all %}Un{% endif %}like </button>
+    <div class="input-group">
+    <span class="input-group-text">Views: {{ article.views }}</span>
+    <span class="input-group-text">Likes:&nbsp;<span id="id_likes_count">{{ article.likes.count }}</span></span>
+    <button id="id_like_btn" class="btn btn-info" data-action="{% if request.user in article.likes.all %}un{% endif %}like" onclick="like('{{ article.id }}')">{% if request.user in article.likes.all %}Un{% endif %}Like </button>
+  </div>
   </p>
   {% if article.featured_image %}<img src="{{ article.featured_image.url }}" class="img-fluid rounded">{% endif %}
 
+  
   
   <p>{{ article.content|safe }}</p>
   <br>
